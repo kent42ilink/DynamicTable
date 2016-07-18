@@ -1,0 +1,37 @@
+﻿
+@{
+    ViewBag.Title = "DynamicTable";
+}
+
+<script>
+@model  DynamicTable.Models.ViewModel.HomeViewModel
+
+</script>
+
+<h2>DynamicTable</h2>
+
+
+@using (Html.BeginForm())
+{
+    <div id="divDynamicTableArea">
+        @{
+            Html.RenderPartial("_DynamicTablePartial");
+        }
+    </div>
+
+    <input id="btnGetData" type="button" value="GetData" class="btn btn-default hide" onclick="GetData();" />
+
+    <input id="btnAddRow" type="button" value="AddRow" class="btn btn-info" onclick="AddRow();" />
+    <input id="btnSubmit" type="submit" class="btn btn-success" value="FormSubmit" />
+
+
+}
+
+@if (TempData["Message"] != null)
+{
+    <script>
+        alert("@TempData["Message"]")
+    </script>
+}
+
+

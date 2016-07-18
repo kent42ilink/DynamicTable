@@ -1,0 +1,59 @@
+﻿@model  DynamicTable.Models.ViewModel.HomeViewModel
+<script>
+    $(document).ready(function () {
+        $('#ddlCounty').change(function () { ChangeTownList(); });
+    });
+
+
+    function ChangeTownList() {
+        var CountyKey = $('#ddlCounty option:selected').val();
+        if ($.trim(CountyKey).length > 0) {
+            GetTownList(CountyKey);
+        }
+    }
+
+    function GetTownList(CountyKey) {
+        $.ajax({
+            url: '@Url.Action("GetTownList", "Home")',
+            data: { CountyKey: CountyKey },
+            type: 'post',
+            cache: false,
+            async: true,
+            dataType: 'json',
+            success: function (data) {
+                if (data.length > 0) {
+                    $('#ddlTown').empty();
+                    $('#ddlTown').html(data)
+
+                    $.each(data, function (i, item) {
+                        if (item.Selected) {
+                            $('#ddlTown').append($('<option selected></option>').val(item.Key).text(item.Value));
+                        } else {
+                            $('#ddlTown').append($('<option ></option>').val(item.Key).text(item.Value));
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+</script>
+
+<select id="ddlCounty">
+
+    @foreach (var County in Model.CountyList)
+    {
+        <option value="@County.Value" @(County.Selected == true ? "selected" : "")>@County.Text</option>
+
+    }
+</select>
+<div id="divddlTown">
+    <select id="ddlTown">
+
+        @foreach (var County in Model.TownList)
+        {
+            <option value="@County.Value" @(County.Selected == true ? "selected" : "")>@County.Text</option>
+
+        }
+    </select>
+</div>

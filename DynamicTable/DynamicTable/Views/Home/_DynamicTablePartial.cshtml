@@ -1,0 +1,75 @@
+﻿@model  DynamicTable.Models.ViewModel.HomeViewModel
+
+<script>
+
+    function GetData() {
+        console.log($('form').serialize());
+        $.ajax({
+            method: "POST",
+            url: "/Home/_DynamicTablePartial",
+            data: $('form').serialize()
+        })
+      .done(function (data) {
+          LoadPartialView(data);
+      });
+    }
+
+    function AddRow() {
+        $.ajax({
+            method: "POST",
+            url: "/Home/AddRow",
+            data: $('form').serialize()
+        })
+     .done(function (data) {
+         LoadPartialView(data)
+     });
+    }
+
+    function DeleteData(ID) {
+        $.ajax({
+            method: "POST",
+            url: "/Home/DeleteRow",
+            data: $('form').serialize() + "&ID=" + ID
+        })
+     .done(function (data) {
+         LoadPartialView(data)
+     });
+    }
+
+    function LoadPartialView(data) {
+        $("#divDynamicTableArea").empty();
+        $("#divDynamicTableArea").html(data);
+    }
+</script>
+
+
+<table class="table-bordered">
+
+
+    @{int i = 0; }
+    @foreach (var Row in Model.RowList)
+    {
+        <tr>
+            <td>   
+                @Html.LabelFor(m => Model.RowList[i].ID)
+                @Row.ID
+                @Html.HiddenFor(m => Model.RowList[i].ID)
+            </td>
+            <td>
+                @Html.LabelFor(m => Model.RowList[i].Name)
+                @Html.TextBoxFor(m => Model.RowList[i].Name)
+            </td>
+            <td>
+                @Html.LabelFor(m => Model.RowList[i].NickName)
+                @Html.TextBoxFor(m => Model.RowList[i].NickName)
+            </td>
+            <td>
+                @Html.LabelFor(m => Model.RowList[i].Content)
+                @Html.TextBoxFor(m => Model.RowList[i].Content)
+                <input id="btnDel" type="button" value="Delete" onclick="DeleteData('@Row.ID');" />
+
+            </td>
+        </tr>
+        { i ++; }
+    }
+</table>
